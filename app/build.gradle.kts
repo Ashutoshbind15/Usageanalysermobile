@@ -1,13 +1,26 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "2.2.0"
+    id("com.google.devtools.ksp") version "2.0.21-1.0.25"
 }
 
 android {
     namespace = "com.example.greetingcard"
     compileSdk = 36
+
+
+    val localProps = Properties()
+    val localPropsFile = File(rootDir, "local.properties")
+
+    if(localPropsFile.exists() && localPropsFile.isFile) {
+        localPropsFile.inputStream().use {
+            localProps.load(it)
+        }
+    }
 
     defaultConfig {
         applicationId = "com.example.greetingcard"
@@ -15,11 +28,13 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "SERVER_CLIENT_ID", "\"${authProps.getProperty("SERVER_CLIENT_ID", "")}\"")
-        buildConfigField("String", "AUTH_SERVER_ENDPOINT", "\"${authProps.getProperty("AUTH_SERVER_ENDPOINT", "")}\"")
+
+        buildConfigField("String", "ServerClientId", localProps.getProperty("SERVER_CLIENT_ID"))
+        buildConfigField("String", "AuthServerEndpoint", localProps.getProperty("AUTH_SERVER_ENDPOINT"))
+
     }
+
 
     buildTypes {
         release {
@@ -39,6 +54,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -64,6 +80,11 @@ dependencies {
     implementation("androidx.credentials:credentials:1.5.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
+    // Room database
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

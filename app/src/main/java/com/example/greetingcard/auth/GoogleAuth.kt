@@ -22,7 +22,7 @@ const val TAG = "GoogleAuthLogger"
 
 class GoogleAuth(private val context: Context, private val scope: CoroutineScope) {
     private val googleSignInOption: GetSignInWithGoogleOption =
-            GetSignInWithGoogleOption.Builder(serverClientId = BuildConfig.SERVER_CLIENT_ID)
+            GetSignInWithGoogleOption.Builder(serverClientId = BuildConfig.ServerClientId)
                     .setNonce(nonce = generateNonce())
                     .build()
 

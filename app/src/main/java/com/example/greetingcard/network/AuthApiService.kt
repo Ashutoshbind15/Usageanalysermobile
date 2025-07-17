@@ -12,7 +12,7 @@ import retrofit2.http.POST
 private val retrofit =
         Retrofit.Builder()
                 .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-                .baseUrl(BuildConfig.AUTH_SERVER_ENDPOINT)
+                .baseUrl(BuildConfig.AuthServerEndpoint)
                 .build()
 
 @Serializable data class AuthServiceResponse(val result: Boolean)
